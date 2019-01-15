@@ -36,7 +36,7 @@ class Casacore < Formula
     build_type = "release"
     mkdir_p "build/#{build_type}"
     cd "build/#{build_type}"
-    system "sed", "-i '' 's/Boost REQUIRED COMPONENTS python/Boost REQUIRED COMPONENTS python27/g' ../../python/CMakeLists.txt"
+    system "sed", "-i","''", "-e", "s/Boost REQUIRED COMPONENTS python/Boost REQUIRED COMPONENTS python27/g","../../python/CMakeLists.txt"
     cmake_args = std_cmake_args
     cmake_args.delete "-DCMAKE_BUILD_TYPE=None"
     cmake_args << "-DCMAKE_BUILD_TYPE=#{build_type}"
