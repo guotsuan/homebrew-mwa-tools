@@ -22,12 +22,12 @@ class Casacore < Formula
     # Boost 1.67 changed the Python library name and cmake 3.11.3 doesn't like it
     # Remove the version pin once cmake catches up
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/1865
-    depends_on "boost-python@1.59"
+    depends_on "boost-python"
     depends_on "numpy"
   end
 
   if build.with?("python")
-    depends_on "boost-python@1.59" => "with-python"
+    depends_on "boost-python" => "with-python"
     depends_on "numpy"
   end
 
@@ -36,6 +36,7 @@ class Casacore < Formula
     build_type = "release"
     mkdir_p "build/#{build_type}"
     cd "build/#{build_type}"
+    sed -i '' 's/Boost REQUIRED COMPONENTS python/Boost REQUIRED COMPONENTS python27/g' ../../python/CMakeLists.txt
     cmake_args = std_cmake_args
     cmake_args.delete "-DCMAKE_BUILD_TYPE=None"
     cmake_args << "-DCMAKE_BUILD_TYPE=#{build_type}"
@@ -46,7 +47,6 @@ class Casacore < Formula
       cmake_args << "-DPYTHON2_EXECUTABLE=/usr/local/bin/python2"
       cmake_args << "-DPYTHON2_LIBRARY=/usr/local/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib"
       # XXX Remove once cmake handles Boost 1.67
-      cmake_args << "-DBOOST_ROOT=/usr/local/opt/boost@1.59;/usr/local/opt/boost-python@1.59"
     else
       cmake_args << "-DBUILD_PYTHON=OFF"
     end
@@ -56,7 +56,6 @@ class Casacore < Formula
       cmake_args << "-DPYTHON3_EXECUTABLE=/usr/local/bin/python3"
       cmake_args << "-DPYTHON3_LIBRARY=/usr/local/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6.dylib"
       # XXX Remove once cmake handles Boost 1.67
-      cmake_args << "-DBOOST_ROOT=/usr/local/opt/boost@1.59;/usr/local/opt/boost-python@1.59"
     end
 
     cmake_args << "-DUSE_FFTW3=ON" << "-DFFTW3_ROOT_DIR=#{HOMEBREW_PREFIX}"
