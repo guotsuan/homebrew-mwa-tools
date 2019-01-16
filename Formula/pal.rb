@@ -5,6 +5,7 @@ class Pal < Formula
   sha256 "191fde8c4f45d6807d4b011511344014966bb46e44029a4481d070cd5e7cc697"
 
   depends_on "cmake" => :build
+  depends_on "eraf"
 
   def install
     # ENV.deparallelize  # if your formula fails when building in parallel
@@ -13,11 +14,10 @@ class Pal < Formula
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--without-starlink",
-                          "--includedir=#{prefix}/include",
                           "--prefix=#{prefix}"
                             
     # system "cmake", ".", *std_cmake_args
-    system "make", "install", "cincludedir=#{prefix}/include" # if this fails, try separate make/make install steps
+    system "make", "install"  # if this fails, try separate make/make install steps
   end
 
   test do
