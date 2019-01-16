@@ -16,7 +16,7 @@ class Casacore < Formula
   depends_on "hdf5"
   depends_on "readline"
   depends_on "casacore-data"
-  depends_on "gcc"
+  depends_on "gcc" => :build
 
   if build.with?("python@2")
     # Boost 1.67 changed the Python library name and cmake 3.11.3 doesn't like it
