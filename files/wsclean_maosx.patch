@@ -1,0 +1,80 @@
+diff --git a/wsclean/CMakeLists.txt b/wsclean/CMakeLists.txt
+index 941d8e0..0e79bca 100644
+--- a/wsclean/CMakeLists.txt
++++ b/wsclean/CMakeLists.txt
+@@ -123,7 +123,7 @@ set_target_properties(wsclean-lib PROPERTIES OUTPUT_NAME wsclean)
+ set_target_properties(wsclean-lib PROPERTIES SOVERSION ${WSCLEAN_VERSION_SO})
+ 
+ add_library(wsclean-shared SHARED ${WSCLEANFILES})
+-target_link_libraries(wsclean-shared)
++target_link_libraries(wsclean-shared wsclean-lib ${CASACORE_LIBRARIES} ${FFTW3_LIB} ${FFTW3_THREADS_LIB} ${Boost_DATE_TIME_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${CFITSIO_LIBRARY} ${GSL_LIB} ${GSL_CBLAS_LIB} ${PTHREAD_LIB} ${LBEAM_LIBS} ${IDGAPI_LIBRARIES} ${HDF5_LIBRARIES})
+ set_target_properties(wsclean-shared PROPERTIES SOVERSION ${WSCLEAN_VERSION_SO})
+ 
+ add_executable(wsclean wscleanmain.cpp)
+diff --git a/wsclean/matrix2x2.h b/wsclean/matrix2x2.h
+index 01c998e..372588b 100644
+--- a/wsclean/matrix2x2.h
++++ b/wsclean/matrix2x2.h
+@@ -375,7 +375,7 @@ public:
+ 	static void RotationMatrix(std::complex<T>* matrix, double alpha)
+ 	{
+ 		T cosAlpha, sinAlpha;
+-		sincos(alpha, &sinAlpha, &cosAlpha);
++		__sincos(alpha, &sinAlpha, &cosAlpha);
+ 		matrix[0] = cosAlpha; matrix[1] = -sinAlpha;
+ 		matrix[2] = sinAlpha; matrix[3] = cosAlpha;
+ 	}
+diff --git a/wsclean/mwa/beam2016implementation.cpp b/wsclean/mwa/beam2016implementation.cpp
+index 7261c9b..71df0a9 100644
+--- a/wsclean/mwa/beam2016implementation.cpp
++++ b/wsclean/mwa/beam2016implementation.cpp
+@@ -459,7 +459,7 @@ int Beam2016Implementation::P1sin( int nmax, double theta, vector<double>& p1sin
+ 	p1_out.resize(size);
+ 
+ 	double sin_th, u;
+-	sincos(theta, &sin_th, &u);
++	__sincos(theta, &sin_th, &u);
+ 	double delu=1e-6;
+ 	
+ 	vector<double> P, Pm1, Pm_sin, Pu_mdelu, Pm_sin_merged, Pm1_merged;
+diff --git a/wsclean/mwa/tilebeambase.cpp b/wsclean/mwa/tilebeambase.cpp
+index be1a432..2527031 100644
+--- a/wsclean/mwa/tilebeambase.cpp
++++ b/wsclean/mwa/tilebeambase.cpp
+@@ -51,9 +51,9 @@ void TileBeamBase<Implementation>::ArrayResponse(double raRad, double decRad, co
+ 	casacore::MDirection hadec = j2000ToHaDec(imageDir);
+ 	double ha = hadec.getValue().get()[0];
+ 	double sinLat, cosLat;
+-	sincos(arrLatitude, &sinLat, &cosLat);
++	__sincos(arrLatitude, &sinLat, &cosLat);
+ 	double sinDec, cosDec;
+-	sincos(decRad, &sinDec, &cosDec);
++	__sincos(decRad, &sinDec, &cosDec);
+ 	double cosHA = cos(ha);
+ 	double zenithDistance = acos(sinLat * sinDec + cosLat * cosDec * cosHA);
+ 	casacore::MDirection azel = j2000ToAzelGeo(imageDir);
+@@ -89,9 +89,9 @@ void TileBeamBase<Implementation>::PrecalculatePositionInfo(TileBeamBase::Precal
+ 	posInfo.ha = hadec.getValue().get()[0];
+ 	posInfo.dec = decRad;
+ 	double sinLat, cosLat;
+-	sincos(arrLatitude, &sinLat, &cosLat);
++	__sincos(arrLatitude, &sinLat, &cosLat);
+ 	double sinDec, cosDec;
+-	sincos(decRad, &sinDec, &cosDec);
++	__sincos(decRad, &sinDec, &cosDec);
+ 	double cosHA = cos(posInfo.ha);
+ 	posInfo.zenithAngle = acos(sinLat * sinDec + cosLat * cosDec * cosHA);
+ 	casacore::MDirection azel = j2000ToAzelGeo(imageDir);
+diff --git a/wsclean/wsclean/directmsgridder.cpp b/wsclean/wsclean/directmsgridder.cpp
+index c5287c6..c273bfc 100644
+--- a/wsclean/wsclean/directmsgridder.cpp
++++ b/wsclean/wsclean/directmsgridder.cpp
+@@ -7,6 +7,8 @@
+ #include <thread>
+ #include <vector>
+ 
++#define M_PIl       0xc.90fdaa22168c235p-2L
++
+ template<typename num_t>
+ DirectMSGridder<num_t>::DirectMSGridder(class ImageBufferAllocator* imageAllocator, size_t nThreads) :
+ 	_nThreads(nThreads),
