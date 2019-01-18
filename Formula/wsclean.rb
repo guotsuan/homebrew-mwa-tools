@@ -10,6 +10,7 @@ class Wsclean < Formula
   depends_on "fftw"
   depends_on "boost"
   depends_on "cfitsio"
+  depends_on "gsl"
   
 
   def install
