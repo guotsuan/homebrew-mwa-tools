@@ -3,7 +3,7 @@ class MwaReduce < Formula
   homepage "https://github.com/guotsuan/homebrew-mwa-tools/raw/master/files/mwa-reduce.tar.gz"
   url "https://github.com/guotsuan/homebrew-mwa-tools/raw/master/files/mwa-reduce.tar.gz"
   version "2019.1.17"
-  sha256 "2be5567b098c2691c54c7421c763bc537ae7b5e03ff283e69c1f3a9fc75cc78f"
+  sha256 "07aab999f0f6ae6a078c445c2bef031ba017c35481c7a5054e6ab9dc306d06d7"
 
   option "without-avx512"
 
