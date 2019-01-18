@@ -5,7 +5,7 @@ class Pal < Formula
   sha256 "191fde8c4f45d6807d4b011511344014966bb46e44029a4481d070cd5e7cc697"
 
   depends_on "cmake" => :build
-  depends_on "eraf"
+  depends_on "erfa"
 
   def install
     # ENV.deparallelize  # if your formula fails when building in parallel
