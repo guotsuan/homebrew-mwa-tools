@@ -6,6 +6,7 @@ class Casacore < Formula
   head "https://github.com/casacore/casacore.git"
 
   option "without-cxx11", "Build without C++11 support"
+  option "without-avx512", "Fix errors in new iMacpro"
 
   depends_on "cmake" => :build
   depends_on "cfitsio"
@@ -37,6 +38,9 @@ class Casacore < Formula
     mkdir_p "build/#{build_type}"
     cd "build/#{build_type}"
     system "sed", "-i","''", "-e", "s/Boost REQUIRED COMPONENTS python/Boost REQUIRED COMPONENTS python27/g","../../python/CMakeLists.txt"
+    if build.with?("without-avx512")
+        inreplace "../../CMakeLists.txt", "-march=native", "-march=skylake"
+    end
     cmake_args = std_cmake_args
     cmake_args.delete "-DCMAKE_BUILD_TYPE=None"
     cmake_args << "-DCMAKE_BUILD_TYPE=#{build_type}"
@@ -61,6 +65,7 @@ class Casacore < Formula
     cmake_args << "-DUSE_FFTW3=ON" << "-DFFTW3_ROOT_DIR=#{HOMEBREW_PREFIX}"
     cmake_args << "-DUSE_HDF5=ON" << "-DHDF5_ROOT_DIR=#{HOMEBREW_PREFIX}"
     cmake_args << "-DUSE_THREADS=ON" << "-DDATA_DIR=#{HOMEBREW_PREFIX}/share/casacore/data"
+
     system "cmake", "../..", *cmake_args
     system "make", "install"
   end
