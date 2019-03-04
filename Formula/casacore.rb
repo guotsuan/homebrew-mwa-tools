@@ -10,6 +10,7 @@ class Casacore < Formula
 
   depends_on "cmake" => :build
   depends_on "cfitsio"
+  depends_on "dysco"
   depends_on "wcslib"
   depends_on "python@2" => :recommended
   depends_on "python" => :optional
