@@ -7,6 +7,7 @@ class Dysco < Formula
   url "https://github.com/aroffringa/dysco/archive/v1.2.zip"
   sha256 "7a817e7d3d4c4747f88e490bfac969bb15abba01078404620e5da0802cee3147"
   depends_on "cmake" => :build
+  depends_on "casacore"
   depends_on "fftw"
 
   def install
