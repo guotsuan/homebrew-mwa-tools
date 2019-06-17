@@ -8,3 +8,5 @@
     $ brew install --with-avx512 <formula>
   
 ### Notes
+
+Cotter is not needed.
